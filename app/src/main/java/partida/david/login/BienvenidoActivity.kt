@@ -17,6 +17,7 @@ class BienvenidoActivity : Activity() {
         boton_cerrarSesion.setOnClickListener{
             val intento1 = Intent(this, LoginActivity::class.java)
             startActivity(intento1)
+            finish()
         }
     }
 }

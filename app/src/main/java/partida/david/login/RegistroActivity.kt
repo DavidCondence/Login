@@ -14,29 +14,45 @@ class RegistroActivity : Activity() {
         setContentView(R.layout.activity_registro)
 
         boton_cancelar.setOnClickListener {
-            val intento1 = Intent(this, LoginActivity::class.java)
-            startActivity(intento1)
+            finish()
         }
         boton_aceptar.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
-            if(new_campo_usuario.getText().toString().isEmpty()){
-                Toast.makeText(this, "Ingresa nombre de usuario", Toast.LENGTH_SHORT).show()
+
+            if (validarCampos(new_campo_usuario.getText().toString(), new_campo_contrasena.getText().toString(), new_campo_contrasenarepeat.getText().toString())) {
+                intent.putExtra("new_nombre", new_campo_usuario.getText().toString())
+                intent.putExtra("new_contrasena", new_campo_contrasena.getText().toString())
+                intent.putExtra("new_contrasena_repeat", new_campo_contrasenarepeat.getText().toString())
+                Toast.makeText(this, "Nuevo usuario registrado", Toast.LENGTH_SHORT).show()
+                startActivityForResult(intent, 123)
+                finish()
+            }
+        }
+    }
+    fun validarCampos(nombre: String, ps1: String, ps2: String): Boolean{
+        if(nombre.isEmpty()){
+            Toast.makeText(this, "Ingresa nombre de usuario", Toast.LENGTH_SHORT).show()
+        } else {
+            if(ps1.isEmpty() || ps2.isEmpty()){
+                Toast.makeText(this, "Ingresa contraseña", Toast.LENGTH_SHORT).show()
             } else {
-                if (new_campo_contrasena.getText().toString().isEmpty()) {
-                    Toast.makeText(this, "Ingresa contraseña", Toast.LENGTH_SHORT).show()
+                if(!validarContrasena(ps1)){
+                    Toast.makeText(this, "Contraseña corta", Toast.LENGTH_SHORT).show()
                 } else {
-                    if (new_campo_contrasena.getText().toString() == new_campo_contrasenarepeat.getText().toString()) {
-                        intent.putExtra("new_nombre", new_campo_usuario.getText().toString())
-                        intent.putExtra("new_contrasena", new_campo_contrasena.getText().toString())
-                        intent.putExtra("new_contrasena_repeat", new_campo_contrasenarepeat.getText().toString())
-                        Toast.makeText(this, "Nuevo usuario registrado", Toast.LENGTH_SHORT).show()
-                        startActivityForResult(intent, 123)
-                        finish()
-                    } else {
+                    if(ps1 != ps2){
                         Toast.makeText(this, "Contraseña diferente, vuelve a repetir", Toast.LENGTH_SHORT).show()
+                    } else {
+                        return true
                     }
                 }
             }
         }
+        return false
+    }
+    fun validarContrasena(ps1: String): Boolean {
+        if (ps1.length >= 6){
+            return true
+        }
+        return false
     }
 }

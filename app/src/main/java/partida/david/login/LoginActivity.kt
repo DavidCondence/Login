@@ -16,6 +16,13 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        var RNombre: String = ""
+        var RPassword: String = ""
+        val intent = intent
+        if(intent.hasExtra("new_nombre")) {
+            RNombre = intent.getStringExtra("new_nombre")
+            RPassword = intent.getStringExtra("new_contrasena")
+        }
 
 
         boton_crearUsuario.setOnClickListener {
@@ -24,17 +31,31 @@ class LoginActivity : AppCompatActivity() {
         }
         boton_Ingresar.setOnClickListener {
             val intent = Intent(this, BienvenidoActivity::class.java)
-            if(campo_nombre.getText().toString().isEmpty()){
-                Toast.makeText(this, "Ingresa nombre de usuario", Toast.LENGTH_SHORT).show()
+            if(validarCampos(RNombre,campo_nombre.getText().toString(),RPassword, campo_contrasena.getText().toString())){
+                intent.putExtra("usuario", campo_nombre.getText().toString())
+                startActivityForResult(intent,123)
+                finish()
+            }
+        }
+    }
+    fun validarCampos(RNombre:String, nombre: String,RPassword: String, ps1: String): Boolean{
+        if(nombre.isEmpty()){
+            Toast.makeText(this, "Ingresa nombre de usuario", Toast.LENGTH_SHORT).show()
+        } else {
+            if(ps1.length <= 5){
+                Toast.makeText(this, "Algún campo erroneo", Toast.LENGTH_SHORT).show()
             } else {
-                if(campo_contrasena.getText().toString().isEmpty()){
-                    Toast.makeText(this, "Ingresa contraseña", Toast.LENGTH_SHORT).show()
+                if(RNombre != nombre){
+                    Toast.makeText(this, "Nombre o contraseña incorrecta", Toast.LENGTH_SHORT).show()
                 } else {
-                    intent.putExtra("usuario", campo_nombre.getText().toString())
-                    startActivityForResult(intent,123)
-                    finish()
+                    if(RPassword != ps1){
+                        Toast.makeText(this, "Nombre o contraseña incorrecta", Toast.LENGTH_SHORT).show()
+                    } else {
+                        return true
+                    }
                 }
             }
         }
+        return false
     }
 }
