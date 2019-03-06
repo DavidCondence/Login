@@ -15,8 +15,7 @@ class BienvenidoActivity : Activity() {
         txt_usuario.text = nombre
 
         boton_cerrarSesion.setOnClickListener{
-            val intento1 = Intent(this, LoginActivity::class.java)
-            startActivity(intento1)
+
             finish()
         }
     }
